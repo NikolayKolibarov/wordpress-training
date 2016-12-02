@@ -13,7 +13,7 @@ if ( ! function_exists( 'add_action' ) ) {
 }
 
 // Setup
-define( 'STUDENT_PLUGIN_URL', __FILE__ );
+define( 'STUDENT_PLUGIN_URL', __FILE__  );
 
 // Includes
 include( 'includes/activate.php' );
