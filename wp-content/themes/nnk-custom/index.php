@@ -13,5 +13,6 @@
 </head>
 <body>
 <h1>NNK CUSTOM THEME</h1>
+<?php wp_footer(); ?>
 </body>
 </html>
