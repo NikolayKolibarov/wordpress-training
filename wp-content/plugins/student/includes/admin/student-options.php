@@ -8,7 +8,8 @@ function nnk_student_options_mb( $post ) {
 			'name'             => '',
 			'age'              => '',
 			'class'            => '',
-			'favorite_subject' => ''
+			'favorite_subject' => '',
+
 		);
 	}
 

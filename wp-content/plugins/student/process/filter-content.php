@@ -14,6 +14,7 @@ function nnk_filter_student_content( $content ) {
 	$student_html = str_replace('AGE_PH', $student_data['age'], $student_html);
 	$student_html = str_replace('CLASS_PH', $student_data['class'], $student_html);
 	$student_html = str_replace('FAVORITE_SUBJECT_PH', $student_data['favorite_subject'], $student_html);
+	$student_html = str_replace('ID_PH', $student_data['id'], $student_html);
 
 	return $student_html . $content;
 }
