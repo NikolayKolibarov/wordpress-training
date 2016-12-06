@@ -36,5 +36,5 @@ function student_init() {
 	);
 
 	register_post_type( 'student', $args );
-
 }
+

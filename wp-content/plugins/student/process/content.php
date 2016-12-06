@@ -1,1 +1,0 @@
-<h1>Student content</h1>
