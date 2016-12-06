@@ -1,20 +1,31 @@
 <?php
 
-function nnk_filter_student_content( $content ) {
-	if ( is_singular( 'student' ) ) {
-		return $content;
-	}
+function nnk_render_single_template($single)
+{
 
-	global $post;
+    global $wp_query, $post;
 
-	$student_data = get_post_meta( $post->ID, 'student_data', true );
+    /* Checks for single template by post type */
+    if ($post->post_type == "student") {
+        if (file_exists(STUDENT_PLUGIN_URL . '/process/single-student.php'))
+            return STUDENT_PLUGIN_URL . '/process/single-student.php';
+    }
+    return $single;
+}
 
-	$student_html = file_get_contents( 'student-template.php', true );
-	$student_html = str_replace('NAME_PH', $student_data['name'], $student_html);
-	$student_html = str_replace('AGE_PH', $student_data['age'], $student_html);
-	$student_html = str_replace('CLASS_PH', $student_data['class'], $student_html);
-	$student_html = str_replace('FAVORITE_SUBJECT_PH', $student_data['favorite_subject'], $student_html);
-	$student_html = str_replace('ID_PH', $student_data['id'], $student_html);
+function nnk_include_template($template_path)
+{
+    if (get_post_type() == 'student') {
+        if (is_single()) {
+            // checks if the file exists in the theme first,
+            // otherwise serve the file from the plugin
+            if ($theme_file = locate_template(array('single-student.php'))) {
+                $template_path = $theme_file;
+            } else {
+                $template_path = plugin_dir_path(STUDENT_PLUGIN_URL) . '/process/single-student.php';
+            }
+        }
+    }
 
-	return $student_html . $content;
+    return $template_path;
 }

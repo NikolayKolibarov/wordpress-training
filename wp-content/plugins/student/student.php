@@ -7,26 +7,27 @@
  * Text Domain: student
  */
 
-if ( ! function_exists( 'add_action' ) ) {
-	echo 'Not allowed. Do not call me directly.';
-	exit();
+if (!function_exists('add_action')) {
+    echo 'Not allowed. Do not call me directly.';
+    exit();
 }
 
 // Setup
-define( 'STUDENT_PLUGIN_URL', __FILE__ );
+define('STUDENT_PLUGIN_URL', __FILE__);
 
 // Includes
-include( 'includes/activate.php' );
-include( 'includes/init.php' );
-include( 'includes/admin/init.php' );
-include( 'process/save-post.php' );
-include( 'process/filter-content.php' );
+include('includes/activate.php');
+include('includes/init.php');
+include('includes/admin/init.php');
+include('process/save-post.php');
+include('process/filter-content.php');
 
 // Hooks
-register_activation_hook( __FILE__, 'nnk_activate_plugin' );
-add_action( 'init', 'student_init' );
-add_action( 'admin_init', 'student_admin_init' );
-add_action( 'save_post_student', 'nnk_save_post_admin', 10, 3 );
-add_filter( 'the_content', 'nnk_filter_student_content' );
+register_activation_hook(__FILE__, 'nnk_activate_plugin');
+add_action('init', 'student_init');
+add_action('admin_init', 'student_admin_init');
+add_action('save_post_student', 'nnk_save_post_admin', 10, 3);
+//add_filter( 'single_template', 'nnk_render_single_template' );
+add_filter('template_include', 'nnk_include_template', 1);
 
-// Shortcodes
+/// Shortcodes
