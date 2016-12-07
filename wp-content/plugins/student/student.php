@@ -21,6 +21,7 @@ include('includes/init.php');
 include('includes/admin/init.php');
 include('process/save-post.php');
 include('process/filter-content.php');
+include('process/student-shortcode.php');
 
 // Hooks
 register_activation_hook(__FILE__, 'nnk_activate_plugin');
@@ -30,3 +31,4 @@ add_action('save_post_student', 'nnk_save_post_admin', 10, 3);
 add_filter('template_include', 'nnk_include_single_template', 1);
 
 /// Shortcodes
+add_shortcode('student_listing', 'nnk_student_render');

@@ -3,7 +3,7 @@ get_header(); ?>
 <div id="primary">
     <main id="main" class="site-main" role="main">
         <?php
-        $student = array('post_type' => 'student',);
+        $student = array('post_type' => 'student');
         $loop = new WP_Query($student);
         $student_data = get_post_meta($post->ID, 'student_data', true);
         ?>
