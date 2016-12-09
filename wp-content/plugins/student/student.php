@@ -22,8 +22,8 @@ class Student {
 		add_action( 'admin_init', array( $this, 'student_admin_init' ) );
 		add_action( 'save_post_student', array( $this, 'nnk_save_post_admin' ), 10, 3 );
 		add_filter( 'template_include', array( $this, 'nnk_include_single_template' ), 1 );
-		add_action( 'widgets_init', array( $this, 'nnk_widgets_init' ) );
 		add_shortcode( 'student_listing', array( $this, 'nnk_student_render' ) );
+		add_action( 'widgets_init', array( $this, 'nnk_widgets_init' ) );
 	}
 
 	public function nnk_activate_plugin() {
@@ -126,6 +126,12 @@ class Student {
 			'<p>' . 'Age' . ' : ' . $atts['age'] . '</h1>' .
 			'<p>' . 'Class' . ' : ' . $atts['class'] . '</h1>' .
 			'<p>' . 'Favorite Subject' . ' : ' . $atts['favorite_subject'] . '</p>';
+	}
+
+	function nnk_widgets_init() {
+		include('widgets/student-list-widget.php');
+
+		register_widget( 'Student_List_Widget' );
 	}
 }
 
