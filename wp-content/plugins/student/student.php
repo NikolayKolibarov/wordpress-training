@@ -51,20 +51,23 @@ class Student {
 		);
 
 		$args = array(
-			'labels'             => $labels,
-			'description'        => __( 'CPT for students.', 'student' ),
-			'public'             => true,
-			'publicly_queryable' => true,
-			'show_ui'            => true,
-			'show_in_menu'       => true,
-			'query_var'          => true,
-			'rewrite'            => array( 'slug' => 'student' ),
-			'capability_type'    => 'post',
-			'has_archive'        => true,
-			'hierarchical'       => false,
-			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
-			'taxonomies'         => array( 'category', 'post_tag' )
+			'labels'                => $labels,
+			'description'           => __( 'CPT for students.', 'student' ),
+			'public'                => true,
+			'publicly_queryable'    => true,
+			'show_ui'               => true,
+			'show_in_menu'          => true,
+			'query_var'             => true,
+			'rewrite'               => array( 'slug' => 'student' ),
+			'capability_type'       => 'post',
+			'has_archive'           => true,
+			'hierarchical'          => false,
+			'menu_position'         => null,
+			'show_in_rest'          => true,
+			'rest_base'             => 'students',
+			'rest_controller_class' => 'WP_REST_Posts_Controller',
+			'supports'              => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' ),
+			'taxonomies'            => array( 'category', 'post_tag' )
 		);
 
 		register_post_type( 'student', $args );
@@ -129,7 +132,7 @@ class Student {
 	}
 
 	function nnk_widgets_init() {
-		include('widgets/student-list-widget.php');
+		include( 'widgets/student-list-widget.php' );
 
 		register_widget( 'Student_List_Widget' );
 	}
