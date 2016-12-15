@@ -116,19 +116,20 @@ class Student {
 	function nnk_student_render( $atts, $content = null ) {
 		$atts = shortcode_atts(
 			array(
-				'name'             => 'Default name',
-				'age'              => 'Default age',
-				'class'            => 'Default class',
-				'favorite_subject' => 'Default favorite_subject',
+				'name'             => '',
+				'age'              => '',
+				'class'            => '',
+				'favorite_subject' => '',
 			), $atts
 		);
 
+		$name             = ! empty( $atts['name'] ) ? '<p>' . 'Name' . ' : ' . $atts['name'] . '</h1>' : '';
+		$age              = ! empty( $atts['age'] ) ? '<p>' . 'Age' . ' : ' . $atts['age'] . '</h1>' : '';
+		$class            = ! empty( $atts['class'] ) ? '<p>' . 'Class' . ' : ' . $atts['class'] . '</h1>' : '';
+		$favorite_subject = ! empty( $atts['favorite_subject'] ) ? '<p>' . 'Favorite Subject' . ' : ' . $atts['favorite_subject'] . '</h1>' : '';
+
 		return
-			'<p>Student shortcode:</h1>' .
-			'<p>' . 'Name' . ' : ' . $atts['name'] . '</h1>' .
-			'<p>' . 'Age' . ' : ' . $atts['age'] . '</h1>' .
-			'<p>' . 'Class' . ' : ' . $atts['class'] . '</h1>' .
-			'<p>' . 'Favorite Subject' . ' : ' . $atts['favorite_subject'] . '</p>';
+			'<p>Student shortcode</h1>' . $name . $age . $class . $favorite_subject;
 	}
 
 	function nnk_widgets_init() {
