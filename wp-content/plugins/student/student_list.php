@@ -28,7 +28,9 @@ class Students_List_Table extends WP_List_Table {
 
 		global $wpdb;
 
-		$sql = "SELECT * FROM {$wpdb->prefix}posts WHERE post_type='student'";
+		$sql = "SELECT meta_value FROM wp_posts, wp_postmeta WHERE id=post_id AND meta_key='student_data'";
+
+//		$sql = "SELECT * FROM {$wpdb->prefix}posts WHERE post_type='student'";
 
 		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
@@ -39,9 +41,19 @@ class Students_List_Table extends WP_List_Table {
 		$sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
 
 
-		$result = $wpdb->get_results( $sql, 'ARRAY_A' );
+		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
 
-		return $result;
+
+		$students = array();
+		$data =  get_post_meta( 35, 'student_data', false );
+
+		foreach ( $results as $result ) {
+			$student_meta =  get_post_meta( $result->id, 'student_data', false );
+			array_push($students, $student_meta);
+
+		}
+
+		return $results;
 	}
 
 	public static function delete_student( $id ) {
@@ -68,8 +80,7 @@ class Students_List_Table extends WP_List_Table {
 
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-//            case 'title':
-//                return print_r($item['title'], true);
+
 //			case 'name':
 //				return print_r($item['name'], true);
 //			case 'age':
@@ -80,7 +91,7 @@ class Students_List_Table extends WP_List_Table {
 //				return print_r($item['favorite_subject'], true);
 			default:
 
-				return print_r( $column_name, true ); //Show the whole array for troubleshooting purposes
+				return var_dump( $item, true ); //Show the whole array for troubleshooting purposes
 		}
 	}
 
@@ -93,7 +104,6 @@ class Students_List_Table extends WP_List_Table {
 	function get_columns() {
 		$columns = [
 			'cb'               => '<input type="checkbox" />',
-			'post_title'       => __( 'Title', 'sp' ),
 			'name'             => __( 'Name', 'sp' ),
 			'age'              => __( 'Age', 'sp' ),
 			'class'            => __( 'Class', 'sp' ),
