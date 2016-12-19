@@ -28,48 +28,18 @@ class Students_List_Table extends WP_List_Table {
 
 		global $wpdb;
 
-		$sql = "SELECT meta_value FROM wp_posts, wp_postmeta WHERE id=post_id AND meta_key='student_data'";
-
-//		$sql = "SELECT * FROM {$wpdb->prefix}posts WHERE post_type='student'";
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			$sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-			$sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
-		}
-
-		$sql .= " LIMIT $per_page";
-		$sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
-
+		$sql = "SELECT * FROM wp_posts, wp_postmeta WHERE id=post_id AND meta_key='student_data'";
 
 		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
 
 
-		$students = array();
-		$data =  get_post_meta( 35, 'student_data', false );
-
-		foreach ( $results as $result ) {
-			$student_meta =  get_post_meta( $result->id, 'student_data', false );
-			array_push($students, $student_meta);
-
-		}
-
 		return $results;
-	}
-
-	public static function delete_student( $id ) {
-		global $wpdb;
-
-		$wpdb->delete(
-			"{$wpdb->prefix}students",
-			[ 'ID' => $id ],
-			[ '%d' ]
-		);
 	}
 
 	public static function record_count() {
 		global $wpdb;
 
-		$sql = "SELECT COUNT(*) FROM {$wpdb->prefix}students";
+		$sql = "SELECT COUNT(*) FROM wp_posts, wp_postmeta WHERE id=post_id AND meta_key='student_data'";
 
 		return $wpdb->get_var( $sql );
 	}
@@ -79,31 +49,16 @@ class Students_List_Table extends WP_List_Table {
 	}
 
 	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
 
-//			case 'name':
-//				return print_r($item['name'], true);
-//			case 'age':
-//				return print_r($item['age'], true);
-//			case 'class':
-//				return print_r($item['class'], true);
-//			case'favorite_subject':
-//				return print_r($item['favorite_subject'], true);
-			default:
+		$student = get_post_meta( $item['ID'], 'student_data', true );
 
-				return var_dump( $item, true ); //Show the whole array for troubleshooting purposes
-		}
+		return ( $student[$column_name] );
+
 	}
 
-	function column_cb( $item ) {
-		return sprintf(
-			'<input type="checkbox" name="bulk-delete[]" value="%s" />', $item['ID']
-		);
-	}
 
 	function get_columns() {
 		$columns = [
-			'cb'               => '<input type="checkbox" />',
 			'name'             => __( 'Name', 'sp' ),
 			'age'              => __( 'Age', 'sp' ),
 			'class'            => __( 'Class', 'sp' ),
@@ -113,26 +68,11 @@ class Students_List_Table extends WP_List_Table {
 		return $columns;
 	}
 
-	public function get_sortable_columns() {
-		$sortable_columns = array();
 
-		return $sortable_columns;
-	}
-
-	public function get_bulk_actions() {
-		$actions = [
-			'bulk-delete' => 'Delete'
-		];
-
-		return $actions;
-	}
 
 	public function prepare_items() {
 
 		$this->_column_headers = $this->get_column_info();
-
-		/** Process bulk action */
-		$this->process_bulk_action();
 
 		$per_page     = $this->get_items_per_page( 'students_per_page', 5 );
 		$current_page = $this->get_pagenum();
@@ -146,46 +86,6 @@ class Students_List_Table extends WP_List_Table {
 		$this->items = self::get_students( $per_page, $current_page );
 	}
 
-	public function process_bulk_action() {
-
-		//Detect when a bulk action is being triggered...
-		if ( 'delete' === $this->current_action() ) {
-
-			// In our file that handles the request, verify the nonce.
-			$nonce = esc_attr( $_REQUEST['_wpnonce'] );
-
-			if ( ! wp_verify_nonce( $nonce, 'sp_delete_student' ) ) {
-				die( 'Go get a life script kiddies' );
-			} else {
-				self::delete_student( absint( $_GET['student'] ) );
-
-				// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-				// add_query_arg() return the current url
-				wp_redirect( esc_url_raw( add_query_arg() ) );
-				exit;
-			}
-
-		}
-
-		// If the delete bulk action is triggered
-		if ( ( isset( $_POST['action'] ) && $_POST['action'] == 'bulk-delete' )
-		     || ( isset( $_POST['action2'] ) && $_POST['action2'] == 'bulk-delete' )
-		) {
-
-			$delete_ids = esc_sql( $_POST['bulk-delete'] );
-
-			// loop over the array of record IDs and delete them
-			foreach ( $delete_ids as $id ) {
-				self::delete_student( $id );
-
-			}
-
-			// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-			// add_query_arg() return the current url
-			wp_redirect( esc_url_raw( add_query_arg() ) );
-			exit;
-		}
-	}
 
 }
 
